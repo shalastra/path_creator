@@ -1,0 +1,19 @@
+{
+  "name": "path_creator",
+  "version": "1.0.0",
+  "description": "Path creator written using d3 library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shalastra/path_creator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shalastra/path_creator/issues"
+  },
+  "homepage": "https://github.com/shalastra/path_creator#readme"
+}
