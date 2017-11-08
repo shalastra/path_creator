@@ -1,1 +1,5 @@
-var d3 = require("d3");
+$(document).ready(function() {
+
+    console.log('.app');
+    $('.app').append('<p>test</p>');
+});
