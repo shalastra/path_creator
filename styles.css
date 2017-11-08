@@ -1,0 +1,34 @@
+body {
+    margin: 0 !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+#app {
+    background-color: #DCE1D8 !important;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+tr {
+    height:20px !important;
+}
+
+td {
+    width:20px !important;
+    hieght: 20px !important;
+}
+
+table {
+    border: #243E36;
+}
+
+#element {
+    background-color: #7B88D1;
+}
