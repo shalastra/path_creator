@@ -1,61 +1,44 @@
-$(document).ready(function() {
-    var ARR_WIDTH = 50;
-    var ARR_HEIGHT = 25;
+$(document).ready(function () {
+    var shapeArchive = [];
 
-    var selectedColor = '#7B88D1';
+    var colors = ['#BC445D', '#D6BD4E', '#D2EB8B', '#13CCCC', '#4B80E4'];
 
-    function createArray() {
-        var x = new Array(ARR_HEIGHT);
-
-        for(var i = 0; i<ARR_HEIGHT; i++) {
-            x[i] = new Array(ARR_WIDTH);
-        }
-
-        return x;
+    function Shape(x, y, size) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
     }
 
-    function initMapWithFalse(param) {
-        for(var i = 0; i<param.length; i++) {
-            for(var j = 0; j<param[i].length; j++) {
-                param[i][j] = false;
-            }
-        }
+    function getRandom(min, max) {
+        return Math.floor(Math.random() * (max - min) + min);
     }
 
-    function createHtmlTable() {
-        var table = $('<table frame="box"></table>').addClass('table-grid');
-
-        for(i=0; i<ARR_HEIGHT; i++) {
-            var row_position = 'row-' + i;
-            var row = $('<tr></tr>').addClass(row_position);
-
-            for(j=0; j<ARR_WIDTH; j++) {
-                var cell_position = 'cell-' + j;
-                var cell = $('<td></td>').addClass(cell_position);
-                row.append(cell);
-            }
-            table.append(row);
-        }
-        $('#app').append(table);
+    function getRandomColor() {
+        return colors[getRandom(0, colors.size-1)];
     }
 
-    function initFirstSelectedCell() {
-        $('tr.row-0').find('td.cell-0')
-            .css('background-color', selectedColor)
-            .addClass('current');
-        map[0][0] = true;
+    function draw(shape) {
+        svg.append('circle')
+            .attr('class', 'click-circle')
+            .attr('cx', shape.x)
+            .attr('cy', shape.y)
+            .attr('r', shape.size)
+            .style('fill', getRandomColor());
+
+        shapeArchive.push(shape);
     }
 
-    var map = createArray();
-    initMapWithFalse(map);
+    var svg = d3.select('#app').append('svg')
+        .attr('width', 980)
+        .attr('height', 580);
 
-    createHtmlTable();
+    svg.on('click', function () {
+        var coords = d3.mouse(this);
 
-    initFirstSelectedCell();
+        console.log(coords);
 
-    $('.current').keydown(function (e) {
-       if(e.which == 40) {
-           console.log('Up was pressed');
-       }
+        var shape = new Shape(coords[0], coords[1], getRandom(5, 50));
+
+        draw(shape);
     });
 });
