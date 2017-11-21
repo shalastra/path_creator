@@ -11,8 +11,10 @@ $(document).ready(function () {
     }
 
     function getRandom(min, max) {
-        return Math.floor(Math.random() * (max - min) + min);
+        // return Math.floor(Math.random() * (max - min) + min);
+        return 25;
     }
+
 
     function getRandomColor() {
         return colors[Math.floor(Math.random() * colors.length)];
@@ -50,14 +52,17 @@ $(document).ready(function () {
             var coordX = coords[0];
             var coordY = coords[1];
 
-            var angle = Math.atan2(coordY - prevShape.y, coordX - prevShape.x);
+            var angle = Math.atan2(coordY - prevShape.y, coordX - prevShape.x) * 180/Math.PI;
 
-            var newCoordX = prevShape.x + ((prevShape.size + range) * Math.sin(0));
-            var newCoordY = prevShape.y - ((prevShape.size + range) * Math.cos(0));
+            console.log(angle);
+            var newCoordX = prevShape.x + ((prevShape.size + range) * Math.sin(angle));
+            var newCoordY = prevShape.y - ((prevShape.size + range) * Math.cos(angle));
 
             var shape = new Shape(newCoordX, newCoordY, range, getRandomColor());
 
             draw(shape);
         }
+
+        console.log(shapeArchive);
     });
 });
