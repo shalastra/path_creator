@@ -3,10 +3,11 @@ $(document).ready(function () {
 
     var colors = ['#BC445D', '#D6BD4E', '#D2EB8B', '#13CCCC', '#4B80E4'];
 
-    function Shape(x, y, size) {
+    function Shape(x, y, size, color) {
         this.x = x;
         this.y = y;
         this.size = size;
+        this.color = color;
     }
 
     function getRandom(min, max) {
@@ -14,7 +15,7 @@ $(document).ready(function () {
     }
 
     function getRandomColor() {
-        return colors[getRandom(0, colors.size-1)];
+        return colors[Math.floor(Math.random() * colors.length)];
     }
 
     function draw(shape) {
@@ -23,7 +24,7 @@ $(document).ready(function () {
             .attr('cx', shape.x)
             .attr('cy', shape.y)
             .attr('r', shape.size)
-            .style('fill', getRandomColor());
+            .style('fill', shape.color);
 
         shapeArchive.push(shape);
     }
@@ -37,8 +38,26 @@ $(document).ready(function () {
 
         console.log(coords);
 
-        var shape = new Shape(coords[0], coords[1], getRandom(5, 50));
+        if(shapeArchive.length === 0) {
+            var shape = new Shape(coords[0], coords[1], getRandom(5, 50), getRandomColor());
 
-        draw(shape);
+            draw(shape);
+        } else {
+            var prevShape = shapeArchive.slice(-1).pop();
+
+            var range = getRandom(5, 50);
+
+            var coordX = coords[0];
+            var coordY = coords[1];
+
+            var angle = Math.atan2(coordY - prevShape.y, coordX - prevShape.x);
+
+            var newCoordX = prevShape.x + ((prevShape.size + range) * Math.sin(0));
+            var newCoordY = prevShape.y - ((prevShape.size + range) * Math.cos(0));
+
+            var shape = new Shape(newCoordX, newCoordY, range, getRandomColor());
+
+            draw(shape);
+        }
     });
 });
