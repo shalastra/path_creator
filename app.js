@@ -1,68 +1,61 @@
 $(document).ready(function () {
-    var shapeArchive = [];
+    function gridData() {
+        var data = new Array();
+        var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
+        var ypos = 1;
+        var width = 50;
+        var height = 50;
+        var click = 0;
 
-    var colors = ['#BC445D', '#D6BD4E', '#D2EB8B', '#13CCCC', '#4B80E4'];
+        // iterate for rows
+        for (var row = 0; row < 10; row++) {
+            data.push( new Array() );
 
-    function Shape(x, y, size, color) {
-        this.x = x;
-        this.y = y;
-        this.size = size;
-        this.color = color;
-    }
-
-    function getRandom(min, max) {
-        // return Math.floor(Math.random() * (max - min) + min);
-        return 25;
-    }
-
-
-    function getRandomColor() {
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
-
-    function draw(shape) {
-        svg.append('circle')
-            .attr('class', 'click-circle')
-            .attr('cx', shape.x)
-            .attr('cy', shape.y)
-            .attr('r', shape.size)
-            .style('fill', shape.color);
-
-        shapeArchive.push(shape);
-    }
-
-    var svg = d3.select('#app').append('svg')
-        .attr('width', 980)
-        .attr('height', 580);
-
-    svg.on('click', function () {
-        var coords = d3.mouse(this);
-
-        console.log(coords);
-
-        if(shapeArchive.length === 0) {
-            var shape = new Shape(coords[0], coords[1], getRandom(5, 50), getRandomColor());
-
-            draw(shape);
-        } else {
-            var prevShape = shapeArchive.slice(-1).pop();
-
-            var range = getRandom(5, 50);
-
-            var coordX = coords[0];
-            var coordY = coords[1];
-
-            var angle = Math.atan2(coordY - prevShape.y, coordX - prevShape.x) * 180/Math.PI;
-
-            console.log(angle);
-            var newCoordX = prevShape.x + ((prevShape.size + range) * Math.sin(angle));
-            var newCoordY = prevShape.y - ((prevShape.size + range) * Math.cos(angle));
-
-            var shape = new Shape(newCoordX, newCoordY, range, getRandomColor());
-
-            draw(shape);
+            // iterate for cells/columns inside rows
+            for (var column = 0; column < 10; column++) {
+                data[row].push({
+                    x: xpos,
+                    y: ypos,
+                    width: width,
+                    height: height,
+                    click: click
+                })
+                // increment the x position. I.e. move it over by 50 (width variable)
+                xpos += width;
+            }
+            // reset the x position after a row is complete
+            xpos = 1;
+            // increment the y position for the next row. Move it down 50 (height variable)
+            ypos += height;
         }
+        return data;
+    }
 
-        console.log(shapeArchive);
-    });
+    var gridData = gridData();
+// I like to log the data to the console for quick debugging
+    console.log(gridData);
+
+    var grid = d3.select("#grid")
+        .append("svg")
+        .attr("width","510px")
+        .attr("height","510px");
+
+    var row = grid.selectAll(".row")
+        .data(gridData)
+        .enter().append("g")
+        .attr("class", "row");
+
+    var column = row.selectAll(".square")
+        .data(function(d) { return d; })
+        .enter().append("rect")
+        .attr("class","square")
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; })
+        .attr("width", function(d) { return d.width; })
+        .attr("height", function(d) { return d.height; })
+        .style("fill", "#fff")
+        .style("stroke", "#222")
+        .on('click', function(d) {
+            d3.select(this).style("fill","#2C93E8");
+        });
 });
