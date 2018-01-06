@@ -65,11 +65,12 @@
         .style("fill", "#fff")
         .style("stroke", "#222");
 
-    var rand = Math.floor(Math.random() * 10);
+    var rand = Math.floor(Math.random() * 11) + 1;
 
-    var selected = column.each(function (d, i) {
+    var selected = row.each(function (d, i) {
+        i = i+1;
         if (i == rand) {
-            d3.select(this).style('fill', "#2C93E8");
+            d3.select(this).selectAll("rect:nth-of-type(" + i + ")").style('fill', "#2C93E8");
         }
     });
 }());
