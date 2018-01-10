@@ -61,6 +61,8 @@
             square.exit()
                 .style("fill", "#d26")
                 .transition().duration(500)
+                .attr("width", 0)
+                .attr("height", 0)
                 .remove();
 
             setTimeout(arguments.callee, 500);
