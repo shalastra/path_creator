@@ -1,76 +1,69 @@
 (function () {
-    function gridData () {
-        var data = new Array();
-        var xpos = 1;
-        var ypos = 1;
-        var width = 50;
-        var height = 50;
-        var checked = false;
+    var width = window.innerWidth;
+    var height = window.innerHeight;
 
-        // iterate for rows
-        for (var row = 0; row < 10; row++) {
-            data.push(new Array());
+    columns = 10,
+        rows = 10,
 
-            // iterate for cells/columns inside rows
-            for (var column = 0; column < 10; column++) {
-                data[row].push({
-                    x: xpos,
-                    y: ypos,
-                    width: width,
-                    height: height,
-                    checked: checked
-                })
-                // increment the x position. I.e. move it over by 50 (width variable)
-                xpos += width;
-            }
-            // reset the x position after a row is complete
-            xpos = 1;
-            // increment the y position for the next row. Move it down 50 (height variable)
-            ypos += height;
-        }
-        return data;
+        wRatio = width / columns,
+        hRatio = height / rows;
+
+    var grid = new CellGrid(rows, columns);
+
+    var pattern = new Array(rows);
+    for (var i = -1; ++i < rows;) {
+        pattern[i] = new Array(columns);
     }
 
-    var gridData = gridData();
-    console.log(gridData);
+    pattern[3][3] = true;
+    pattern[3][4] = true;
+    pattern[3][5] = true;
+    pattern[3][6] = true;
+    pattern[4][3] = true;
+    pattern[4][6] = true;
+    pattern[5][3] = true;
+    pattern[5][6] = true;
+    pattern[6][3] = true;
+    pattern[6][4] = true;
+    pattern[6][5] = true;
+    pattern[6][6] = true;
+    console.log(pattern);
 
-    var grid = d3.select("#grid")
-        .append("svg")
-        .attr("width", "510px")
-        .attr("height", "510px");
+    grid.setPattern(pattern);
 
-    var row = grid.selectAll(".row")
-        .data(gridData)
-        .enter().append("g")
-        .attr("class", "row");
+    grid.reset();
 
-    var column = row.selectAll(".square")
-        .data(function (d) {
-            return d;
-        })
-        .enter().append("rect")
-        .attr("class", "square")
-        .attr("x", function (d) {
-            return d.x;
-        })
-        .attr("y", function (d) {
-            return d.y;
-        })
-        .attr("width", function (d) {
-            return d.width;
-        })
-        .attr("height", function (d) {
-            return d.height;
-        })
-        .style("fill", "#fff")
-        .style("stroke", "#222");
+    var svg = d3.select('body').append("svg:svg")
+        .attr("width", width)
+        .attr("height", height);
 
-    var rand = Math.floor(Math.random() * 11) + 1;
+    var square = svg.selectAll("square");
 
-    var selected = row.each(function (d, i) {
-        i = i+1;
-        if (i == rand) {
-            d3.select(this).selectAll("rect:nth-of-type(" + i + ")").style('fill', "#2C93E8");
+    (function () {
+        if (!grid.isSolved()) {
+            console.log("Pattern is incorrect, still solving...");
+
+            grid.makeStep();
+
+            square = square.data(grid.getMarked(), function (d) {
+                return d.n
+            });
+
+            square.enter().append("square")
+                .attr("x", function (d) {   
+                    return d.x * wRatio
+                })
+                .attr("y", function (d) {
+                    return d.y * hRatio
+                })
+                .transition().duration(500)
+                .style("fill", "#2ca02c");
+            ;
+
+
+            setTimeout(arguments.callee, 500);
+        } else {
+            console.log("Solved!");
         }
-    });
+    })();
 }());
