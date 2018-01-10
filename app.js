@@ -27,7 +27,6 @@
     pattern[6][4] = true;
     pattern[6][5] = true;
     pattern[6][6] = true;
-    console.log(pattern);
 
     grid.setPattern(pattern);
 
@@ -41,11 +40,8 @@
 
     (function () {
         if (!grid.isSolved()) {
-            // console.log("Pattern is incorrect, still solving...");
-
             grid.makeStep();
 
-            console.log(grid.getMarked());
             square = square.data(grid.getMarked(), function (d) {
                 return d.n
             });
@@ -61,8 +57,11 @@
                 .attr("height", hRatio)
                 .transition().duration(500)
                 .style("fill", "#2ca02c");
-            ;
 
+            square.exit()
+                .style("fill", "#d26")
+                .transition().duration(500)
+                .remove();
 
             setTimeout(arguments.callee, 500);
         } else {

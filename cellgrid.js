@@ -3,6 +3,8 @@ function CellGrid (rows, columns) {
 
     this.pattern = new Array();
 
+    this.lastCell = null;
+
     var n = 0;
 
     for (var i = -1; ++i < rows;) {
@@ -41,9 +43,17 @@ CellGrid.prototype.setPattern = function (pattern) {
 };
 
 CellGrid.prototype.isSolved = function () {
-    var selected = this.getMarked();
+    console.log(this.cells);
 
-    return selected.equals(this.pattern);
+    for (var i = -1; ++i < rows;) {
+        for (var j = -1; ++j < columns;) {
+            if(this.pattern[i][j] != this.cells[i][j].isCorrect) {
+                return false;
+            }
+        }
+    }
+
+    return true;
 };
 
 CellGrid.prototype.getMarked = function () {
@@ -57,19 +67,44 @@ CellGrid.prototype.getMarked = function () {
 };
 
 CellGrid.prototype.makeStep = function () {
-    if(this.isEmpty()) {
-        // console.log("Grid is empty.");
+    var orientation = [-1, 0, 1];
+
+    if (this.isEmpty()) {
         var cell = this.selectRandomCell();
         cell.mark();
+
+        if (this.pattern[cell.x][cell.y]) {
+            cell.markAsCorrect();
+
+            this.lastCell = cell;
+            this.cells[cell.x][cell.y] = cell;
+        } else {
+            cell.unmark();
+        }
     } else {
-        console.log("Grid has at least one correct selection.");
+        var cell = this.cells[this.lastCell.x + orientation[getRandomInt(3)]][this.lastCell.y + orientation[getRandomInt(3)]];
+
+        cell.mark();
+        if (this.pattern[cell.x][cell.y]) {
+            cell.markAsCorrect();
+
+            this.lastCell = cell;
+
+            this.cells[cell.x][cell.y] = cell;
+        } else {
+            cell.unmark();
+        }
     }
 };
+
+//TODO: Fix checking pattern when all squares are drawn
+//TODO: Split steps for marking and unmarking
+//TODO: LastCell is the last correct, without jumping
 
 CellGrid.prototype.isEmpty = function () {
     for (var i = -1; ++i < rows;) {
         for (var j = -1; ++j < columns;) {
-            if(this.cells[i][j].isCorrect) {
+            if (this.cells[i][j].isCorrect) {
                 return false;
             }
         }
@@ -79,39 +114,9 @@ CellGrid.prototype.isEmpty = function () {
 };
 
 CellGrid.prototype.selectRandomCell = function () {
-    return this.cells[getRandomInt()][getRandomInt()];
+    return this.cells[getRandomInt(10)][getRandomInt(10)];
 };
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * 10);
+function getRandomInt (max) {
+    return Math.floor(Math.random() * max);
 }
-
-// Warn if overriding existing method
-if (Array.prototype.equals)
-    console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
-// attach the .equals method to Array's prototype to call it on any array
-Array.prototype.equals = function (array) {
-    // if the other array is a falsy value, return
-    if (!array)
-        return false;
-
-    // compare lengths - can save a lot of time
-    if (this.length != array.length)
-        return false;
-
-    for (var i = 0, l = this.length; i < l; i++) {
-        // Check if we have nested arrays
-        if (this[i] instanceof Array && array[i] instanceof Array) {
-            // recurse into the nested arrays
-            if (!this[i].equals(array[i]))
-                return false;
-        }
-        else if (this[i] != array[i]) {
-            // Warning - two different object instances will never be equal: {x:20} != {x:20}
-            return false;
-        }
-    }
-    return true;
-}
-// Hide method from for-in loops
-Object.defineProperty(Array.prototype, "equals", {enumerable: false});
