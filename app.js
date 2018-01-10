@@ -1,5 +1,5 @@
 (function () {
-    var width = window.innerWidth;
+    var width = window.innerHeight;
     var height = window.innerHeight;
 
     columns = 10,
@@ -33,29 +33,32 @@
 
     grid.reset();
 
-    var svg = d3.select('body').append("svg:svg")
+    var svg = d3.select('body').append("svg")
         .attr("width", width)
         .attr("height", height);
 
-    var square = svg.selectAll("square");
+    var square = svg.selectAll("rect");
 
     (function () {
         if (!grid.isSolved()) {
-            console.log("Pattern is incorrect, still solving...");
+            // console.log("Pattern is incorrect, still solving...");
 
             grid.makeStep();
 
+            console.log(grid.getMarked());
             square = square.data(grid.getMarked(), function (d) {
                 return d.n
             });
 
-            square.enter().append("square")
-                .attr("x", function (d) {   
+            square.enter().append("rect")
+                .attr("x", function (d) {
                     return d.x * wRatio
                 })
                 .attr("y", function (d) {
                     return d.y * hRatio
                 })
+                .attr("width", wRatio)
+                .attr("height", hRatio)
                 .transition().duration(500)
                 .style("fill", "#2ca02c");
             ;

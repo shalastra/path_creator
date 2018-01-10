@@ -47,21 +47,18 @@ CellGrid.prototype.isSolved = function () {
 };
 
 CellGrid.prototype.getMarked = function () {
-    var selected = new Array(rows);
+    var selected = [];
 
-    for (var i = -1; ++i < rows;) {
-        selected[i] = new Array(columns);
-        for (var j = -1; ++j < columns;) {
-            selected[i][j] = this.cells[i][j].isCorrect;
-        }
-    }
+    this.eachCell(function (cell) {
+        cell.marked && selected.push(cell);
+    });
 
     return selected;
 };
 
 CellGrid.prototype.makeStep = function () {
     if(this.isEmpty()) {
-        console.log("Grid is empty.");
+        // console.log("Grid is empty.");
         var cell = this.selectRandomCell();
         cell.mark();
     } else {
