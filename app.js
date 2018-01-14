@@ -71,3 +71,9 @@
         }
     })();
 }());
+
+// 0. Wygenerować n kształtów
+// 1. Ustalic kryteria wyboru np. symetria
+// 2. Połączyć pasujące kształty w parynp. poprzez góra-dół, lewo-prawo
+// 3. Sprawdzić nowe pokolenie pod względem spełniania kryteriów
+// 4. Generować kształty dopóki będzie taka potrzeba

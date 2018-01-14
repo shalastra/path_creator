@@ -43,11 +43,9 @@ CellGrid.prototype.setPattern = function (pattern) {
 };
 
 CellGrid.prototype.isSolved = function () {
-    console.log(this.cells);
-
     for (var i = -1; ++i < rows;) {
         for (var j = -1; ++j < columns;) {
-            if(this.pattern[i][j] != this.cells[i][j].isCorrect) {
+            if (this.pattern[i][j] && this.pattern[i][j] !== this.cells[i][j].isCorrect) {
                 return false;
             }
         }
@@ -73,6 +71,8 @@ CellGrid.prototype.makeStep = function () {
         var cell = this.selectRandomCell();
         cell.mark();
 
+        console.log(cell);
+
         if (this.pattern[cell.x][cell.y]) {
             cell.markAsCorrect();
 
@@ -85,6 +85,8 @@ CellGrid.prototype.makeStep = function () {
         var cell = this.cells[this.lastCell.x + orientation[getRandomInt(3)]][this.lastCell.y + orientation[getRandomInt(3)]];
 
         cell.mark();
+
+        console.log(cell);
         if (this.pattern[cell.x][cell.y]) {
             cell.markAsCorrect();
 
